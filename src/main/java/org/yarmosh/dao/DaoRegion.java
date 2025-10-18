@@ -91,7 +91,6 @@ public class DaoRegion extends DAO<Region>{
              PreparedStatement ps = conn.prepareStatement(SELECT_ALL_REGION)) {
 
             ResultSet rs = ps.executeQuery();
-            System.out.println("query executed");
             while (rs.next()) {
                 Region region = new Region(
                         rs.getInt("id"),
@@ -102,7 +101,6 @@ public class DaoRegion extends DAO<Region>{
                 regions.add(region);
             }
         } catch (SQLException | JDBCConnectionException e) {
-            e.printStackTrace(); // prints full stack trace
             throw new JDBCConnectionException("Failed to get all Regions", e);
         }
         return regions;

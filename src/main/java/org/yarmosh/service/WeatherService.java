@@ -1,5 +1,4 @@
 package org.yarmosh.service;
-
 import org.yarmosh.dao.DAOException;
 import org.yarmosh.dao.DaoCitizenType;
 import org.yarmosh.dao.DaoRegion;
@@ -47,7 +46,6 @@ public class WeatherService {
         List<Weather> result = new ArrayList<>();
         for (Weather weather : weathers) {
             if (weather.getRegion() == regionId) {
-                System.out.println(weather.getPrecipitation());
                 result.add(weather);
             }
         }
@@ -60,12 +58,10 @@ public class WeatherService {
         List<Weather> weathers = daoWeather.getAll();
         List<String> result = new ArrayList<>();
 
-        System.out.printf("Weather in %s: ", regionName);
         for (Weather weather : weathers) {
             if (weather.getRegion() == regionId &&
                     weather.getTemperature() < temperature &&
                     weather.getPrecipitation().equals("снег")) {
-                System.out.println(weather.getPrecipitation());
                 result.add(weather.getDate());
             }
         }
@@ -76,7 +72,7 @@ public class WeatherService {
         List<Region> regions = daoRegion.getAll();
         List<Weather> weathers = daoWeather.getAll();
 
-        List<String> lastWeek = getLastWeekDays();
+        List<String> lastWeek = getCurrWeekDays();
         List<Integer> regionIds = new ArrayList<>();
         for (Region region : regions) {
             int citizenTypeId = region.getCitizenType();
@@ -85,7 +81,6 @@ public class WeatherService {
                 regionIds.add(region.getId());
             }
         }
-
         List<Weather> result = new ArrayList<>();
         for (Weather weather : weathers) {
             if (lastWeek.contains(weather.getDate()) && regionIds.contains(weather.getRegion())) {
@@ -95,25 +90,7 @@ public class WeatherService {
         }
         return result;
     }
-    public void updateWeatherForRegion(String regionName, String date, int temperature, String precipitation) throws JDBCConnectionException {
-        int regionId = getRegionIdByName(regionName);
-        Region region = daoRegion.read(regionId);
-        daoWeather.create(new Weather(1, region, date, temperature, precipitation));
-        System.out.println("Weather info added");
-    }
-    public void createRegion(String regionName, int regionSquare, String citizenType) throws JDBCConnectionException {
-        List<CitizenType> citizenTypes = daoCitizenType.getAll();
-
-        CitizenType typeForRegion;
-        for (CitizenType type : citizenTypes) {
-            if (Objects.equals(type.getName(), citizenType)) {
-                typeForRegion = daoCitizenType.read(type.getId());
-                daoRegion.create(new Region(1, regionName, regionSquare, typeForRegion));
-                System.out.println("Region added");
-            }
-        }
-    }
-    public static List<String> getLastWeekDays() {
+    public static List<String> getCurrWeekDays() {
         List<String> days = new ArrayList<>();
         LocalDate today = LocalDate.now();
 
@@ -128,5 +105,22 @@ public class WeatherService {
 
         return days;
     }
+    public void updateWeatherForRegion(String regionName, String date, int temperature, String precipitation) throws JDBCConnectionException {
+        int regionId = getRegionIdByName(regionName);
+        Region region = daoRegion.read(regionId);
+        daoWeather.create(new Weather(1, region, date, temperature, precipitation));
+        System.out.println("Погода добавлена успешно!");
+    }
+    public void createRegion(String regionName, int regionSquare, String citizenType) throws JDBCConnectionException {
+        List<CitizenType> citizenTypes = daoCitizenType.getAll();
 
+        CitizenType typeForRegion;
+        for (CitizenType type : citizenTypes) {
+            if (Objects.equals(type.getName(), citizenType)) {
+                typeForRegion = daoCitizenType.read(type.getId());
+                daoRegion.create(new Region(1, regionName, regionSquare, typeForRegion));
+                System.out.println("Регион добавлен успешно!");
+            }
+        }
+    }
 }

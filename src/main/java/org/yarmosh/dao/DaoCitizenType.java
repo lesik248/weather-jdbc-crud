@@ -23,10 +23,6 @@ public class DaoCitizenType extends DAO<CitizenType> {
     private static final String SELECT_ALL_CITIZEN_TYPE =
             "SELECT * FROM citizen_type";
 
-    public DaoCitizenType() {
-        this.connector = getJdbcConnector();
-    }
-
     public void create(CitizenType type) throws JDBCConnectionException {
 
         try (Connection conn = connector.getConnection();

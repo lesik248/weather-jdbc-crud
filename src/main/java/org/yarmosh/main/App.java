@@ -27,16 +27,24 @@ public class App{
                         System.out.println("Введите название региона: ");
                         String regionName = myObj.nextLine();
                         weatherService.getWeatherForRegion(regionName).forEach(System.out::println);
+                        break;
                     }
                     case "2": {
                         System.out.println("Введите название региона: ");
                         String regionName = myObj.nextLine();
-                        weatherService.getWeatherForRegion(regionName);
+                        int temperature = 1;
+                        while (temperature >= 0) {
+                            System.out.println("Введите температуру (<0): ");
+                            temperature = Integer.parseInt(myObj.nextLine());
+                        }
+                        weatherService.getRegionSnowyDates(regionName, temperature).forEach(System.out::println);
+                        break;
                     }
                     case "3": {
                         System.out.println("Введите язык: ");
                         String language = myObj.nextLine();
-                        weatherService.getWeatherByLanguage(language);
+                        weatherService.getWeatherByLanguage(language).forEach(System.out::println);
+                        break;
                     }
                     case "4": {
                         System.out.println("Введите название региона: ");
@@ -48,6 +56,7 @@ public class App{
                         System.out.println("Введите тип осадков: ");
                         String precipitation = myObj.nextLine();
                         weatherService.updateWeatherForRegion(region, date, temperature, precipitation);
+                        break;
                     }
                     case "5": {
                         System.out.println("Введите название региона: ");
@@ -57,12 +66,12 @@ public class App{
                         System.out.println("Введите тип жителей: ");
                         String citizenType = myObj.nextLine();
                         weatherService.createRegion(region, square, citizenType);
+                        break;
                     }
                     case "0": {
                         break;
                     }
                 }
-
             }
         } catch (JDBCConnectionException e) {
             throw new RuntimeException(e);

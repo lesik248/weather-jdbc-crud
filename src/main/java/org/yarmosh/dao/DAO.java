@@ -6,10 +6,8 @@ import org.yarmosh.db.JDBCConnectionException;
 import org.yarmosh.db.JdbcConnector;
 
 public abstract class DAO<T> {
-    protected JdbcConnector connector;
-    public DAO() throws DAOException {
-        connector = new JdbcConnector();
-    }
+    protected final JdbcConnector connector = new JdbcConnector();
+
     public JdbcConnector getJdbcConnector() {
         return connector;
     }
