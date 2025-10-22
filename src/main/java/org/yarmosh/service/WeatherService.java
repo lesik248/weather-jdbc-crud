@@ -18,7 +18,6 @@ public class WeatherService {
     private final DaoRegion daoRegion;
     private final DaoCitizenType daoCitizenType;
 
-
     public WeatherService() {
         daoWeather = new DaoWeather();
         daoRegion = new DaoRegion();

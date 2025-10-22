@@ -71,7 +71,7 @@ public class App{
                         break;
                     }
                     case "0": {
-                        break;
+                        return;
                     }
                 }
             } catch (WeatherServiceException e) {
