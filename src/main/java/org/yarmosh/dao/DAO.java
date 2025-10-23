@@ -3,11 +3,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.yarmosh.db.JDBCConnectionException;
-import org.yarmosh.db.JdbcConnector;
+import org.yarmosh.db.ConnectionPool;
 
 public abstract class DAO<T> {
-    protected final JdbcConnector connector = new JdbcConnector();
+    protected final ConnectionPool pool;
 
+    public DAO() throws JDBCConnectionException {
+        this.pool = ConnectionPool.getInstance();
+    }
     public abstract void create(T item) throws SQLException, JDBCConnectionException;
     public abstract T read(int id) throws SQLException, JDBCConnectionException;
     public abstract void update(T entity) throws SQLException, JDBCConnectionException;

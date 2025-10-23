@@ -1,5 +1,7 @@
 package org.yarmosh.service;
 
+import org.yarmosh.db.JDBCConnectionException;
+
 public class WeatherServiceException extends Exception {
     public WeatherServiceException(String message) {
         super(message);
@@ -7,5 +9,9 @@ public class WeatherServiceException extends Exception {
 
     public WeatherServiceException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public WeatherServiceException(Throwable e) {
+        super(e);
     }
 }

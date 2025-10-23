@@ -2,6 +2,7 @@ package org.yarmosh.service;
 import org.yarmosh.dao.DaoCitizenType;
 import org.yarmosh.dao.DaoRegion;
 import org.yarmosh.dao.DaoWeather;
+import org.yarmosh.db.ConnectionPool;
 import org.yarmosh.db.JDBCConnectionException;
 import org.yarmosh.model.CitizenType;
 import org.yarmosh.model.Region;
@@ -13,12 +14,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeatherService {
+public class WeatherService implements AutoCloseable {
     private final DaoWeather daoWeather;
     private final DaoRegion daoRegion;
     private final DaoCitizenType daoCitizenType;
 
-    public WeatherService() {
+    public WeatherService() throws JDBCConnectionException {
         daoWeather = new DaoWeather();
         daoRegion = new DaoRegion();
         daoCitizenType = new DaoCitizenType();
@@ -103,7 +104,6 @@ public class WeatherService {
             for (Weather weather : weathers) {
                 if (lastWeek.contains(weather.getDate()) && regionWithLanguageIds.contains(weather.getRegion())) {
                     result.add(weather);
-                    System.out.println(weather.getPrecipitation());
                 }
             }
             if (result.isEmpty()) {
@@ -137,7 +137,6 @@ public class WeatherService {
             int regionId = getRegionIdByName(regionName);
             Region region = daoRegion.read(regionId);
             daoWeather.create(new Weather(1, region, date, temperature, precipitation));
-            System.out.println("Погода добавлена успешно!");
         }
         catch (JDBCConnectionException e) {
             throw new WeatherServiceException(e.getMessage(), e);
@@ -159,6 +158,14 @@ public class WeatherService {
         }
         catch (JDBCConnectionException e) {
             throw new WeatherServiceException(e.getMessage(), e);
+        }
+    }
+    public void close() throws WeatherServiceException {
+        try {
+            ConnectionPool.getInstance().closeAllConnections();
+        }
+        catch (JDBCConnectionException e) {
+            throw new WeatherServiceException(e);
         }
     }
 }
